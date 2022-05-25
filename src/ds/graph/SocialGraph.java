@@ -1,6 +1,7 @@
 package ds.graph;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class SocialGraph {
 	
@@ -122,9 +123,37 @@ public class SocialGraph {
 	 * @param target
 	 * @return A list of nodes that must be traversed to get to target, from start. 
 	 */
-	public ArrayList<Person> searchDFS(Person start, Person target) {
+	public ArrayList<Person> searchDFS(Person start, Person target) throws PersonDoesNotExist {
+		if (!vertices.contains(start) || !vertices.contains(target))
+			throw new PersonDoesNotExist("Person isn't in the graph");
+		
+		
+		
+		return searchDFS(start, target, new HashSet<>());
+	}
+	
+	private ArrayList<Person> searchDFS(Person start, Person target, HashSet<Person> visited) {
+		visited.add(start);
+		ArrayList<Person> path = new ArrayList<>();
+		path.add(start);
+		if (start.equals(target)) {
+			
+			return path;
+		}
+		
+		
+		for (Person person : start.getContacts()) {
+			if (!visited.contains(person)) {
+				ArrayList<Person> subpath = searchDFS(person, target, visited);
+				path.addAll(subpath);
+				return path;
+			}
+		}
+		
+		// this should not happen. We assume the graph is connected.
 		return null;
 	}
+	
 	
 	/**
 	 * Implement a depth-first search, from Person start to target.  
