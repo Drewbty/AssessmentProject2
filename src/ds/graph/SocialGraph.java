@@ -33,8 +33,16 @@ public class SocialGraph {
 	 * @throws PersonDoesNotExist If the given person is not found inside the graph. 
 	 * @param p
 	 */
-	public void removeVertex(Person p) {
+	public void removeVertex(Person p) throws PersonDoesNotExist {
+		if (!vertices.contains(p)) {
+			throw new PersonDoesNotExist("Person doesn't exist");
+		}
 		
+		vertices.remove(p);
+		
+		for (Person person : vertices) {
+			person.getContacts().remove(p);
+		}
 	}
 	
 	/**
@@ -48,8 +56,13 @@ public class SocialGraph {
 	 * 
 	 * @throws PersonDoesNotExist	If the person is not found within the graph. 
 	 */
-	public void addEdge(Person a, Person b) {
+	public void addEdge(Person a, Person b) throws PersonDoesNotExist {
+		if (!vertices.contains(a) || !vertices.contains(b)) {
+			throw new PersonDoesNotExist("Person doesn't exist");
+		}
 		
+		a.getContacts().add(b);
+		b.getContacts().add(a);
 	}
 	
 	/**
@@ -60,7 +73,14 @@ public class SocialGraph {
 	 * @param a
 	 * @param b
 	 */
-	public void removeEdge(Person a, Person b) {
+	public void removeEdge(Person a, Person b) throws EdgeDoesNotExist {
+		
+		if (!a.getContacts().contains(b) || !b.getContacts().contains(a)) {
+			throw new EdgeDoesNotExist("Link doesn't exist");
+		}
+		
+		a.getContacts().remove(b);
+		b.getContacts().remove(a);
 		
 	}
 	
