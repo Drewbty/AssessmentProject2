@@ -3,6 +3,8 @@ package ds.graph;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class SocialGraph {
 
@@ -99,8 +101,41 @@ public class SocialGraph {
 	 * @param target
 	 * @return A list of nodes that must be traversed to get to target, from start.
 	 */
-	public ArrayList<Person> searchBFS(Person start, Person target) {
-		return null;
+	public ArrayList<Person> searchBFS(Person start, Person target) throws PersonDoesNotExist {
+		if (!vertices.contains(start) || !vertices.contains(target)) {
+			throw new PersonDoesNotExist("Start or Target person doesn't exist");
+		}
+		
+		return searchBFSinternal(start, target, false);
+	}
+
+	private ArrayList<Person> searchBFSinternal(Person start, Person target, boolean useWeights) {
+		ArrayList<Person> path = new ArrayList<Person>();
+		
+		LinkedList<Person> queue = new LinkedList<>();
+		queue.add(start);
+		HashSet<Person> visited = new HashSet<Person>();
+		
+		while(!queue.isEmpty()) { // only important if we have visited all the people
+			Person currentPerson = queue.poll();
+			
+			if (visited.contains(currentPerson)) {
+				continue;
+			}
+			
+			visited.add(currentPerson);
+			path.add(currentPerson);
+			
+			if (currentPerson.equals(target)) { 
+				return path;
+			}
+			
+			
+			queue.addAll(weightedInfectivenessCompare(currentPerson, useWeights));
+		}
+		
+		
+		return path;
 	}
 
 	/**
@@ -114,8 +149,12 @@ public class SocialGraph {
 	 * @param target
 	 * @return A list of nodes that must be traversed to get to target, from start.
 	 */
-	public ArrayList<Person> searchWeightedBFS(Person start, Person target) {
-		return null;
+	public ArrayList<Person> searchWeightedBFS(Person start, Person target) throws PersonDoesNotExist {
+		if (!vertices.contains(start) || !vertices.contains(target)) {
+			throw new PersonDoesNotExist("Start or Target person doesn't exist");
+		}
+		
+		return searchBFSinternal(start, target, true);
 	}
 
 	/**
@@ -144,6 +183,22 @@ public class SocialGraph {
 			return path;
 		}
 
+		ArrayList<Person> personToVisit = weightedInfectivenessCompare(start, useWeight);
+		
+		
+		for (Person person :personToVisit) {
+			if (!visited.contains(person)) {
+				ArrayList<Person> subpath = searchDFS(person, target, visited, useWeight);
+				path.addAll(subpath);
+				return path;
+			}
+		}
+
+		// this should not happen. We assume the graph is connected.
+		return null;
+	}
+
+	private ArrayList<Person> weightedInfectivenessCompare(Person start, boolean useWeight) {
 		ArrayList<Person> personToVisit = new ArrayList<Person>(start.getContacts());
 		if (useWeight) {
 			personToVisit.sort(new Comparator<Person>() {
@@ -159,18 +214,7 @@ public class SocialGraph {
 				}
 			});
 		}
-		
-		
-		for (Person person :personToVisit) {
-			if (!visited.contains(person)) {
-				ArrayList<Person> subpath = searchDFS(person, target, visited, useWeight);
-				path.addAll(subpath);
-				return path;
-			}
-		}
-
-		// this should not happen. We assume the graph is connected.
-		return null;
+		return personToVisit;
 	}
 
 	/**
