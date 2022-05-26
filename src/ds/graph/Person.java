@@ -18,7 +18,8 @@ public class Person {
 	}
 
 	public float getinfectiveness() {
-		return (getAge() / 100 - (getSocialHygiene() * getAge()));
+		return (float) (getAge() / 100.0 - (getSocialHygiene() * (getAge()/100.0)));
+
 	}
 
 	/**
