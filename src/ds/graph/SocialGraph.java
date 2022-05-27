@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class SocialGraph {
 
-	private ArrayList<Person> vertices;
+	private ArrayList<Person> vertices = new ArrayList<>();
 
 	public SocialGraph() {
 

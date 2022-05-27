@@ -2,6 +2,8 @@ package ds.graph.tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Arrays;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,6 +13,8 @@ import ds.graph.SocialGraph;
 class SocialGraphTest {
 
 	SocialGraph sg = new SocialGraph();
+	Person alice, abigail, ana, andy, calisa;
+	
 	
 	@BeforeEach
 	void setUp() throws Exception {
@@ -21,6 +25,10 @@ class SocialGraphTest {
 		Person a3 = new Person("Anna", 40, .13f);
 		Person a4 = new Person("Andy", 50, .79f);
 		Person a5 = new Person("Aaron", 60, .98f);
+		alice = a1;
+		abigail = a2;
+		ana = a3;
+		andy = a4;
 		
 		sg.addVertex(a1);
 		sg.addVertex(a2);
@@ -80,6 +88,7 @@ class SocialGraphTest {
 		sg.addVertex(c10);
 		
 		sg.addEdge(a1, c1);
+		calisa = c1;
 		sg.addEdge(c2, c3);
 		sg.addEdge(c4, c5);
 		sg.addEdge(c6, c1);
@@ -93,6 +102,16 @@ class SocialGraphTest {
 		sg.addEdge(c10, c8);
 		
 		sg.addEdge(c8, c1);
+	}
+	
+
+	@Test
+	void testContacts() {
+		assertEquals(alice.getContacts().size(), 4, "Amount of contacts of Alice");
+		
+		assertTrue(alice.getContacts().containsAll(Arrays.asList(new Person[] {ana, andy, abigail, calisa})), "Correct contacts");
+		
+		
 	}
 
 }
