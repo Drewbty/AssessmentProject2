@@ -8,19 +8,21 @@ public class Person {
 	private float socialHygiene;
 	private int age;
 	private String name;
-	private ArrayList<Person> contacts;
+	private ArrayList<Person> contacts = new ArrayList<>();
+	
+	public Person() {
+		
+	}
 
 	public Person(String name, int age, float socialHygiene) {
 		this.name = name;
 		this.age = age;
 		this.socialHygiene = socialHygiene;
-		this.contacts = new ArrayList<Person>();
 	}
 
 	public float getinfectiveness() {
-		return (float) (getAge() / 100.0 - (getSocialHygiene() * (getAge()/100.0)));
-
-	}
+		return 1 - (((float)this.age - ((float)this.age * this.socialHygiene)) / (float)this.age);
+	} 
 
 	/**
 	 * @return the socialHygiene
