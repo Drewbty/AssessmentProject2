@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.stream.Collectors;
 
 public class SocialGraph {
 
@@ -246,6 +247,28 @@ public class SocialGraph {
 	 * @return
 	 */
 	public int countContacts(Person start) {
-		return 0;
+		HashSet<Person> visited = new HashSet<Person>();
+		
+		LinkedList<Person> queue = new LinkedList<Person>();
+		queue.addAll(start.getContacts());
+		
+		visited.add(start);
+		visited.addAll(start.getContacts());
+		
+		int amountOfContacts = 0;
+		while(!queue.isEmpty()) { // While we have still contacts of contacts to visit
+			Person currentPerson = queue.poll();
+			
+			for (Person p : currentPerson.getContacts()) {
+				if (!visited.contains(p)) {
+					visited.add(p);
+					++amountOfContacts;
+				}
+			}
+		}
+		return amountOfContacts;
 	}
-}
+	
+	
+	}
+
