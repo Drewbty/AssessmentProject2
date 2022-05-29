@@ -9,6 +9,7 @@ public class Person {
 	private int age;
 	private String name;
 	private ArrayList<Person> contacts = new ArrayList<>();
+	private Business business;
 
 	public Person() {
 
@@ -79,6 +80,21 @@ public class Person {
 	public void setContacts(ArrayList<Person> contacts) {
 		this.contacts = contacts;
 	}
+	
+	
+	/**
+	 * @return the destination
+	 */
+	public Business getBusiness() {
+		return business;
+	}
+
+	/**
+	 * @param destination the destination to set
+	 */
+	public void setBusiness(Business destination) {
+		this.business = destination;
+	}
 
 	@Override
 	public int hashCode() {
@@ -97,7 +113,7 @@ public class Person {
 
 	@Override
 	public String toString() {
-		return "Person: " + getName() + ", " + getAge() + ". Contacts: " + getContacts().size() + ".";
+		return "Person: " + getName() + ", " + getAge() + ". Contacts: " + getContacts().size() + ". " + (getBusiness() == null ? "This person doesn't have a business" : getBusiness());
 
 	}
 
