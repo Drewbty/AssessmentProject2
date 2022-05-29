@@ -23,15 +23,46 @@ public class BusinessGraph {
 	}
 	
 	public int totalPersonsInfected(Business start) {
+		HashSet<Business> visited = new HashSet<Business>();
+		HashSet<Person> infected = new HashSet<Person>();
+		LinkedList<DestinationLength> queue = new LinkedList<DestinationLength>();
 		
+		
+		queue.add(new DestinationLength(0, start));
+		visited.add(start);
+		
+		while(!queue.isEmpty()) {
+			DestinationLength currentDestination = queue.poll();
+			
+			if (currentDestination.getSteps() > 3 || visited.contains(currentDestination.getBusiness())) {
+				continue;
+			}
+			
+			visited.add(currentDestination.getBusiness());
+			
+			for (Person edge : currentDestination.getBusiness().getEdges()) {
+				infected.add(edge);
+				queue.add(new DestinationLength(currentDestination.getSteps() + 1, edge.getBusiness()));
+			}
+		}
+		
+		return infected.size();
 	}
 	
 	
-	public int minStepsToDestFromStart(Business start, Business dest) {
+	public int minStepsToDestFromStart(Business start, Business dest) throws InvalidArguments, DestinationNotReachable {
+		if (dest == null || start == null) {
+			throw new InvalidArguments("Neither the destination nor the start can be null");
+		}
+		
 		HashMap<Business, Business> previousOne = new HashMap<>();
 		HashMap<Business, Integer> steps = new HashMap<Business, Integer>();
 		
 		shortestPathDFS(start, previousOne, steps, 0);
+		
+		if (dest != start && !previousOne.containsKey(dest)) {
+			throw new DestinationNotReachable("We are unable to reach the destination from the start business");
+		}
 		
 		int stepsToDo = 0;
 		Business currentBusiness = dest;
