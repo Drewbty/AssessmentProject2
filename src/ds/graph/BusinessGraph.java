@@ -1,6 +1,7 @@
 package ds.graph;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
@@ -25,8 +26,37 @@ public class BusinessGraph {
 		
 	}
 	
+	
 	public int minStepsToDestFromStart(Business start, Business dest) {
+		HashMap<Business, Business> previousOne = new HashMap<>();
+		HashMap<Business, Integer> steps = new HashMap<Business, Integer>();
 		
+		shortestPathDFS(start, previousOne, steps, 0);
+		
+		int stepsToDo = 0;
+		Business currentBusiness = dest;
+		
+		while(currentBusiness != start) {
+			++stepsToDo;
+			currentBusiness = previousOne.get(currentBusiness);
+		}
+		
+		return stepsToDo;
+	}
+	
+	private void shortestPathDFS(final Business currentBusiness, HashMap<Business, Business> previousOne, HashMap<Business, Integer> steps, int currentSteps ) {
+		for (Person edge : currentBusiness.getEdges()) {
+			if (edge.getBusiness() != null) {
+				if (!previousOne.containsKey(edge.getBusiness())) {
+					previousOne.put(edge.getBusiness(), currentBusiness);
+					steps.put(edge.getBusiness(), currentSteps + 1);
+					shortestPathDFS(edge.getBusiness(), previousOne, steps, currentSteps + 1);
+				}else if (steps.get(edge.getBusiness()) > currentSteps + 1) {
+					previousOne.put(edge.getBusiness(), currentBusiness);
+					steps.put(edge.getBusiness(), currentSteps + 1);
+				}
+			}
+		}
 	}
 	
 	public boolean isStronglyConnected(Business start) {
