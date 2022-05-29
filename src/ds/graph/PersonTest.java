@@ -1,6 +1,6 @@
 package ds.graph;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,21 +29,21 @@ class PersonTest {
 		assertEquals(p.getAge(), 50, "Correct Age");
 		assertEquals(p.getSocialHygiene(), .1f, "Correct Social Hygiene");
 	}
-	
 
 	@Test
 	void testInfectiveness() {
 		Person p = new Person("John", 60, .2f);
-		assertEquals(p.getinfectiveness(), 1 - (((float)p.getAge() - ((float)p.getAge() * p.getSocialHygiene())) / (float)p.getAge()), "Correct Infectiveness");
-				
+		assertEquals(p.getinfectiveness(),
+				1 - ((p.getAge() - (p.getAge() * p.getSocialHygiene())) / p.getAge()),
+				"Correct Infectiveness");
+
 	}
-	
+
 	@Test
 	void testInfectiveness2() {
 		Person p = new Person("John", 30, .5f);
 		assertEquals(p.getinfectiveness(), .5f, "Correct Infectiveness");
-				
-	}
 
+	}
 
 }
