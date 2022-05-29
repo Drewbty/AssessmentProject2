@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Queue;
-import java.util.stream.Collectors;
 
 public class SocialGraph {
 
@@ -18,7 +16,7 @@ public class SocialGraph {
 	/**
 	 * Add the given person to the graph. The person needs to be added to the list
 	 * of vertices.
-	 * 
+	 *
 	 * @param p
 	 * @throws PersonAlreadyExists If the person is already present in the graph,
 	 *                             this method should throw a PersonAlreadyPresent
@@ -36,7 +34,7 @@ public class SocialGraph {
 	/**
 	 * Remove the given Person from the graph. Any edges to this person should also
 	 * be removed.
-	 * 
+	 *
 	 * @throws PersonDoesNotExist If the given person is not found inside the graph.
 	 * @param p
 	 */
@@ -56,12 +54,12 @@ public class SocialGraph {
 	 * Add an edge between the two people (vertices) in the graph. The graph is
 	 * undirected, so both People will need to list the other, in their list of
 	 * contacts.
-	 * 
+	 *
 	 * If the edge already exists, this method should return true.
 	 *
 	 * @param a
 	 * @param b
-	 * 
+	 *
 	 * @throws PersonDoesNotExist If the person is not found within the graph.
 	 */
 	public void addEdge(Person a, Person b) throws PersonDoesNotExist {
@@ -76,7 +74,7 @@ public class SocialGraph {
 	/**
 	 * Remove the edge between the given People from the graph. If no edge existed
 	 * between these people, this method should throw an EdgeDoesNotExist exception.
-	 * 
+	 *
 	 * @throws EdgeDoesNotExist
 	 * @param a
 	 * @param b
@@ -96,7 +94,7 @@ public class SocialGraph {
 	 * Implement a breadth-first search, from Person start to target. This method
 	 * should consider the graph unweighted: the order that the Persons are stored
 	 * inside the contacts list will determine the order that the BFS operates.
-	 * 
+	 *
 	 * @throws PersonDoesNotExist if either start or target are not in the graph.
 	 * @param start
 	 * @param target
@@ -106,36 +104,34 @@ public class SocialGraph {
 		if (!vertices.contains(start) || !vertices.contains(target)) {
 			throw new PersonDoesNotExist("Start or Target person doesn't exist");
 		}
-		
+
 		return searchBFSinternal(start, target, false);
 	}
 
 	private ArrayList<Person> searchBFSinternal(Person start, Person target, boolean useWeights) {
-		ArrayList<Person> path = new ArrayList<Person>();
-		
+		ArrayList<Person> path = new ArrayList<>();
+
 		LinkedList<Person> queue = new LinkedList<>();
 		queue.add(start);
-		HashSet<Person> visited = new HashSet<Person>();
-		
-		while(!queue.isEmpty()) { // only important if we have visited all the people
+		HashSet<Person> visited = new HashSet<>();
+
+		while (!queue.isEmpty()) { // only important if we have visited all the people
 			Person currentPerson = queue.poll();
-			
+
 			if (visited.contains(currentPerson)) {
 				continue;
 			}
-			
+
 			visited.add(currentPerson);
 			path.add(currentPerson);
-			
-			if (currentPerson.equals(target)) { 
+
+			if (currentPerson.equals(target)) {
 				return path;
 			}
-			
-			
+
 			queue.addAll(weightedInfectivenessCompare(currentPerson, useWeights));
 		}
-		
-		
+
 		return path;
 	}
 
@@ -144,7 +140,7 @@ public class SocialGraph {
 	 * associated with each edge should determine the order that the BFS operates.
 	 * Higher weights are preferred over lower weights. The weight is found by
 	 * calling getInfectiveness() on the Person.
-	 * 
+	 *
 	 * @throws PersonDoesNotExist if either start or target are not in the graph.
 	 * @param start
 	 * @param target
@@ -154,7 +150,7 @@ public class SocialGraph {
 		if (!vertices.contains(start) || !vertices.contains(target)) {
 			throw new PersonDoesNotExist("Start or Target person doesn't exist");
 		}
-		
+
 		return searchBFSinternal(start, target, true);
 	}
 
@@ -162,7 +158,7 @@ public class SocialGraph {
 	 * Implement a depth-first search, from Person start to target. This method
 	 * should consider the graph unweighted: the order that the Persons are stored
 	 * inside the contacts list will determine the order that the DFS operates.
-	 * 
+	 *
 	 * @throws PersonDoesNotExist if either start or target are not in the graph.
 	 * @param start
 	 * @param target
@@ -176,6 +172,7 @@ public class SocialGraph {
 	}
 
 	private ArrayList<Person> searchDFS(Person start, Person target, HashSet<Person> visited, boolean useWeight) {
+		System.out.println(start);
 		visited.add(start);
 		ArrayList<Person> path = new ArrayList<>();
 		path.add(start);
@@ -185,22 +182,24 @@ public class SocialGraph {
 		}
 
 		ArrayList<Person> personToVisit = weightedInfectivenessCompare(start, useWeight);
-		
-		
-		for (Person person :personToVisit) {
+
+		for (Person person : personToVisit) {
 			if (!visited.contains(person)) {
 				ArrayList<Person> subpath = searchDFS(person, target, visited, useWeight);
 				path.addAll(subpath);
-				return path;
+				if (path.get(path.size() - 1).equals(target)) {
+					return path;
+				}
 			}
 		}
 
-		// this should not happen. We assume the graph is connected.
-		return null;
+		// In this case, we were in a path that didn't reach the target, because the
+		// other nodes were previously visited
+		return path;
 	}
 
 	private ArrayList<Person> weightedInfectivenessCompare(Person start, boolean useWeight) {
-		ArrayList<Person> personToVisit = new ArrayList<Person>(start.getContacts());
+		ArrayList<Person> personToVisit = new ArrayList<>(start.getContacts());
 		if (useWeight) {
 			personToVisit.sort(new Comparator<Person>() {
 
@@ -223,7 +222,7 @@ public class SocialGraph {
 	 * associated with each edge should determine the order that the DFS operates.
 	 * Higher weights are preferred over lower weights. The weight is found by
 	 * calling getInfectiveness() on the Person.
-	 * 
+	 *
 	 * @throws PersonDoesNotExist if either start or target are not in the graph.
 	 * @param start
 	 * @param target
@@ -241,24 +240,24 @@ public class SocialGraph {
 	 * contacts-of-contacts of the start person. This is the equivalent to doing a
 	 * BFS around the start person, and counting the vertices 2 steps away from the
 	 * start node.
-	 * 
+	 *
 	 * @throws PersonDoesNotExist if either start or target are not in the graph.
 	 * @param start
 	 * @return
 	 */
 	public int countContacts(Person start) {
-		HashSet<Person> visited = new HashSet<Person>();
-		
-		LinkedList<Person> queue = new LinkedList<Person>();
+		HashSet<Person> visited = new HashSet<>();
+
+		LinkedList<Person> queue = new LinkedList<>();
 		queue.addAll(start.getContacts());
-		
+
 		visited.add(start);
 		visited.addAll(start.getContacts());
-		
+
 		int amountOfContacts = 0;
-		while(!queue.isEmpty()) { // While we have still contacts of contacts to visit
+		while (!queue.isEmpty()) { // While we have still contacts of contacts to visit
 			Person currentPerson = queue.poll();
-			
+
 			for (Person p : currentPerson.getContacts()) {
 				if (!visited.contains(p)) {
 					visited.add(p);
@@ -268,7 +267,5 @@ public class SocialGraph {
 		}
 		return amountOfContacts;
 	}
-	
-	
-	}
 
+}

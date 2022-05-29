@@ -9,9 +9,9 @@ public class Person {
 	private int age;
 	private String name;
 	private ArrayList<Person> contacts = new ArrayList<>();
-	
+
 	public Person() {
-		
+
 	}
 
 	public Person(String name, int age, float socialHygiene) {
@@ -21,8 +21,8 @@ public class Person {
 	}
 
 	public float getinfectiveness() {
-		return 1 - (((float)this.age - ((float)this.age * this.socialHygiene)) / (float)this.age);
-	} 
+		return 1 - ((this.age - (this.age * this.socialHygiene)) / this.age);
+	}
 
 	/**
 	 * @return the socialHygiene
@@ -89,17 +89,13 @@ public class Person {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
-			return false;
-		if (this.hashCode() != obj.hashCode()) {
-			return false;
-		}
-		if (getClass() != obj.getClass())
+		if ((obj == null) || (this.hashCode() != obj.hashCode()) || (getClass() != obj.getClass()))
 			return false;
 		Person other = (Person) obj;
 		return Objects.equals(name, other.name);
 	}
 
+	@Override
 	public String toString() {
 		return "Person: " + getName() + ", " + getAge() + ". Contacts: " + getContacts().size() + ".";
 
