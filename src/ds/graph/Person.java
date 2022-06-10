@@ -80,8 +80,8 @@ public class Person {
 	public void setContacts(ArrayList<Person> contacts) {
 		this.contacts = contacts;
 	}
-	
-	
+
+
 	/**
 	 * @return the destination
 	 */

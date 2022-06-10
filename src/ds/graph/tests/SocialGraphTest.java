@@ -1,8 +1,8 @@
 package ds.graph.tests;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -114,10 +114,9 @@ class SocialGraphTest {
 
 	@Test
 	void testContacts() {
-		assertEquals(alice.getContacts().size(), 4, "Amount of contacts of Alice");
+		assertEquals("Amount of contacts of Alice", alice.getContacts().size(), 4);
 
-		assertTrue(alice.getContacts().containsAll(Arrays.asList(new Person[] { ana, andy, abigail, calisa })),
-				"Correct contacts");
+		assertTrue("Correct contacts", alice.getContacts().containsAll(Arrays.asList(new Person[] { ana, andy, abigail, calisa })));
 
 	}
 
@@ -187,10 +186,9 @@ class SocialGraphTest {
 	void testEdgeRemoval() {
 		try {
 			sg.removeEdge(alice, abigail);
-			assertEquals(alice.getContacts().size(), 3, "Amount of contacts of Alice");
+			assertEquals("Amount of contacts of Alice", alice.getContacts().size(), 3);
 
-			assertTrue(alice.getContacts().containsAll(Arrays.asList(new Person[] { ana, andy, calisa })),
-					"Correct contacts");
+			assertTrue("Correct contacts", alice.getContacts().containsAll(Arrays.asList(new Person[] { ana, andy, calisa })));
 		} catch (EdgeDoesNotExist e) {
 			// It should not fail
 			fail("Exception during removal of alice and abigail");
@@ -211,12 +209,12 @@ class SocialGraphTest {
 			}
 		}
 
-		assertTrue(!ana.getContacts().contains(andy), "We are sure they are not contact");
+		assertTrue("We are sure they are not contact", !ana.getContacts().contains(andy));
 
 		try {
 			sg.addEdge(andy, ana);
 
-			assertTrue(ana.getContacts().containsAll(Arrays.asList(new Person[] { andy })), "Correct contacts");
+			assertTrue("Correct contacts", ana.getContacts().containsAll(Arrays.asList(new Person[] { andy })));
 		} catch (PersonDoesNotExist e) {
 			// We expect it to fail
 			fail("Exception during the addition of alice and abigail");
@@ -231,8 +229,8 @@ class SocialGraphTest {
 
 		try {
 			ArrayList<Person> path = sg.searchBFS(alice, bryony);
-			assertEquals(path.get(0), alice, "Alice is the first person");
-			assertEquals(path.get(path.size() - 1), bryony, "Bryony is the last person");
+			assertEquals("Alice is the first person", path.get(0), alice);
+			assertEquals("Bryony is the last person", path.get(path.size() - 1), bryony);
 		} catch (PersonDoesNotExist e) {
 			fail("Exception during BFS");
 		}
@@ -245,9 +243,9 @@ class SocialGraphTest {
 
 		try {
 			ArrayList<Person> path = sg.searchDFS(alice, bryony);
-			assertEquals(path.get(0), alice, "Alice is the first person");
-			assertEquals(path.get(1), abigail, "Abigail is the second person");
-			assertEquals(path.get(path.size() - 1), bryony, "Bryony is the last person");
+			assertEquals("Alice is the first person", path.get(0), alice);
+			assertEquals("Abigail is the second person", path.get(1), abigail);
+			assertEquals("Bryony is the last person", path.get(path.size() - 1), bryony);
 		} catch (PersonDoesNotExist e) {
 			fail("Exception during DFS");
 		}
@@ -257,9 +255,9 @@ class SocialGraphTest {
 	@Test
 	void testCountContacts() {
 
-		assertEquals(sg.countContacts(andy), 4, "Correct amount of contacts of c");
-		assertEquals(sg.countContacts(abigail), 5, "Correct amount of contacts of c");
-		assertEquals(sg.countContacts(bryony), 4, "Correct amount of contacts of c");
+		assertEquals("Correct amount of contacts of c", sg.countContacts(andy), 4);
+		assertEquals("Correct amount of contacts of c", sg.countContacts(abigail), 5);
+		assertEquals("Correct amount of contacts of c", sg.countContacts(bryony), 4);
 
 	}
 
@@ -268,10 +266,10 @@ class SocialGraphTest {
 
 		try {
 			ArrayList<Person> path = sg.searchWeightedDFS(alice, bryony);
-			assertEquals(path.get(0), alice, "Alice is the first person");
-			assertEquals(path.get(path.size() - 1), bryony, "Bryony is the last person");
-			assertEquals(path.get(1), andy, "Andy is the second person");
-			assertEquals(path.get(2), abigail, "Abigail is the 3rd person");
+			assertEquals("Alice is the first person", path.get(0), alice);
+			assertEquals("Bryony is the last person", path.get(path.size() - 1), bryony);
+			assertEquals("Andy is the second person", path.get(1), andy);
+			assertEquals("Abigail is the 3rd person", path.get(2), abigail);
 		} catch (PersonDoesNotExist e) {
 			fail("Exception during DFS");
 		}
@@ -283,10 +281,10 @@ class SocialGraphTest {
 
 		try {
 			ArrayList<Person> path = sg.searchWeightedBFS(bernice, blake);
-			assertEquals(path.get(0), bernice, "Alice is the first person");
-			assertEquals(path.get(path.size() - 1), blake, "blake is the last person");
-			assertEquals(path.get(1), bethany, "Bethany is the second person");
-			assertEquals(path.get(2), blake, "Blake is the 3rd person");
+			assertEquals("Alice is the first person", path.get(0), bernice);
+			assertEquals("blake is the last person", path.get(path.size() - 1), blake);
+			assertEquals("Bethany is the second person", path.get(1), bethany);
+			assertEquals("Blake is the 3rd person", path.get(2), blake);
 		} catch (PersonDoesNotExist e) {
 			fail("Exception during DFS");
 		}
